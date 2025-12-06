@@ -180,11 +180,22 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </div>
                 
                 {product.stock !== null && (
-                  <Badge variant={product.stock > 0 ? "outline" : "destructive"} className="text-sm px-3 py-1">
-                    {product.stock > 0 ? `${product.stock} Stok` : "Stokta Yok"}
+                  <Badge variant={product.stock > 0 || product.stock === -1 ? "outline" : "destructive"} className="text-sm px-3 py-1">
+                    {product.stock === -1 ? "Sınırsız Stok" : product.stock > 0 ? `${product.stock} Stok` : "Stokta Yok"}
                   </Badge>
                 )}
               </div>
+
+              {product.tags && product.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {product.tags.map((tag, index) => (
+                    <Badge key={index} variant="secondary" className="text-sm px-3 py-1 bg-secondary/50 hover:bg-secondary/70 transition-colors">
+                      <Tag className="w-3 h-3 mr-1.5" />
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
 
             <Separator className="bg-border/50" />
@@ -200,23 +211,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   dangerouslySetInnerHTML={{ __html: product.description || "Açıklama bulunmuyor." }}
                 />
               </div>
-
-              {product.server_commands && product.server_commands.length > 0 && (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-bold flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-primary" />
-                    Özellikler
-                  </h3>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {product.server_commands.map((cmd, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/30 p-3 rounded-xl border border-border/50">
-                        <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        <span>Özellik {idx + 1}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
 
             <div className="sticky bottom-4 z-50 bg-background/80 backdrop-blur-md p-4 rounded-2xl border border-primary/20 shadow-2xl lg:static lg:bg-transparent lg:p-0 lg:border-none lg:shadow-none">

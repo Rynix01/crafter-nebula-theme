@@ -102,6 +102,8 @@ export default function Wallet({ paymentId, event }: WalletProps) {
   const [paymentStatus, setPaymentStatus] = useState<"COMPLETED" | "FAILED" | "PENDING" | "ERROR" | null>(null);
   const [isCheckingPayment, setIsCheckingPayment] = useState(false);
 
+  const [isPaymentMethodsLoading, setIsPaymentMethodsLoading] = useState(true);
+
   // Payment check effect
   useEffect(() => {
     const checkPayment = async () => {
@@ -156,6 +158,9 @@ export default function Wallet({ paymentId, event }: WalletProps) {
             description: provider.description,
           }))
         );
+      })
+      .finally(() => {
+        setIsPaymentMethodsLoading(false);
       });
   }, [user]);
 
@@ -670,7 +675,12 @@ export default function Wallet({ paymentId, event }: WalletProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {paymentMethods.length > 0 ? (
+              {isPaymentMethodsLoading ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 opacity-50" />
+                  <p>Ödeme yöntemleri yükleniyor...</p>
+                </div>
+              ) : paymentMethods.length > 0 ? (
                 paymentMethods.map((method) => (
                   <div
                     key={method.id}
@@ -707,8 +717,8 @@ export default function Wallet({ paymentId, event }: WalletProps) {
                 ))
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
-                  <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 opacity-50" />
-                  <p>Ödeme yöntemleri yükleniyor...</p>
+                  <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>Ödeme yöntemi bulunmamaktadır.</p>
                 </div>
               )}
             </CardContent>

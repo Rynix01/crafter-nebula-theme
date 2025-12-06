@@ -18,7 +18,8 @@ import {
   Instagram,
   Youtube,
   Sun,
-  Moon
+  Moon,
+  Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -271,6 +272,31 @@ const Navbar = forwardRef<
                         Sandık
                       </Link>
                     </DropdownMenuItem>
+                    
+                    {user?.role?.permissions && user.role.permissions.length > 0 && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          className="cursor-pointer font-medium w-full"
+                          onClick={() => {
+                            window.open(
+                              `https://app.crafter.net.tr/cms/auth?accessToken=${localStorage.getItem(
+                                "accessToken"
+                              )}&refreshToken=${localStorage.getItem(
+                                "refreshToken"
+                              )}&websiteId=${localStorage.getItem(
+                                "websiteId"
+                              )}`,
+                              "_blank"
+                            );
+                          }}
+                        >
+                          <Settings className="mr-2 h-4 w-4" />
+                          Yönetim Paneli
+                        </DropdownMenuItem>
+                      </>
+                    )}
+
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="text-red-500 focus:text-red-500 cursor-pointer font-medium">
                       <LogOut className="mr-2 h-4 w-4" />
@@ -288,6 +314,8 @@ const Navbar = forwardRef<
                   </Button>
                 </div>
               )}
+
+              
 
               {/* Mobile Menu Toggle */}
               <Button
